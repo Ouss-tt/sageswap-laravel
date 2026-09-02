@@ -1,0 +1,11 @@
+/.phpunit.cache
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+/storage/*.key
+/storage/pail
+Homestead.json
+Homestead.yaml
+auth.json
+.DS_Store
