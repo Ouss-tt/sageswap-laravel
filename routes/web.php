@@ -8,6 +8,8 @@ Route::get('/', [SwapController::class, 'index'])->name('swap');
 Route::post('/', [SwapController::class, 'store'])->name('swap.store');
 Route::post('/quote', [SwapController::class, 'quote'])->name('swap.quote');
 
+Route::get('/transaction/{id}', [SwapController::class, 'show'])->name('transaction');
+
 Route::get('/aml_swap', [SwapController::class, 'aml'])->name('aml-swap');
 Route::post('/aml_swap', [SwapController::class, 'storeAml'])->name('aml-swap.store');
 Route::post('/aml_swap/quote', [SwapController::class, 'quoteAml'])->name('aml-swap.quote');

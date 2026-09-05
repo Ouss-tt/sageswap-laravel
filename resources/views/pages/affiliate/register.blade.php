@@ -22,12 +22,12 @@
 
     @if (session('registered'))
       <div class="form-card">
-        <label class="field-label">PASSWORD</label>
+        <label class="field-label">UUID</label>
         <div class="copy-row">
           <span class="copy-row__value">{{ session('uuid') }}</span>
         </div>
         <div class="form-card__spacer">
-          <label class="field-label">CONFIRM PASSWORD</label>
+          <label class="field-label">PASSWORD</label>
           <div class="copy-row">
             <span class="copy-row__value">{{ session('password') }}</span>
           </div>

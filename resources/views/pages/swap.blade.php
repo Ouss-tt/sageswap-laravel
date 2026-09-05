@@ -18,26 +18,35 @@
             <div class="rate-tabs">
               <input type="radio" name="rate" id="rate-floating" value="floating" class="sr-only" @checked(old('rate', 'floating') === 'floating') />
               <input type="radio" name="rate" id="rate-fixed" value="fixed" class="sr-only" @checked(old('rate') === 'fixed') />
+
+              {{-- Each explanation is toggled by its own checkbox. Keeping these
+                   outside the rate labels is what lets a tap open the tip
+                   instead of switching the rate. --}}
+              <input type="checkbox" id="rate-tip-floating" class="sr-only" aria-label="Explain the floating rate" aria-describedby="tip-floating" />
+              <input type="checkbox" id="rate-tip-fixed" class="sr-only" aria-label="Explain the fixed rate" aria-describedby="tip-fixed" />
+
               <label for="rate-floating" class="rate-tabs__label rate-tabs__label--floating">
                 <span><span class="rate-tabs__marker">&#9642; </span>FLOATING RATE</span>
-                <span class="rate-tabs__help" tabindex="0" aria-describedby="tip-floating">?</span>
-                <span class="rate-tip" id="tip-floating" role="tooltip">
-                  <b class="rate-tip__title">Floating rate</b>
-                  The rate is settled when your deposit confirms, so the amount you receive
-                  follows the market between now and then &mdash; it can land above or below
-                  the quote. Lower fee, less certainty.
-                </span>
               </label>
               <label for="rate-fixed" class="rate-tabs__label rate-tabs__label--fixed">
                 <span><span class="rate-tabs__marker">&#9642; </span>FIXED RATE</span>
-                <span class="rate-tabs__help" tabindex="0" aria-describedby="tip-fixed">?</span>
-                <span class="rate-tip" id="tip-fixed" role="tooltip">
-                  <b class="rate-tip__title">Fixed rate</b>
-                  The quote is locked for you, so you receive exactly the amount shown as long
-                  as you send within the window. Costs a little more &mdash; that premium covers
-                  the price risk.
-                </span>
               </label>
+
+              <label for="rate-tip-floating" class="rate-tabs__help rate-tabs__help--floating">?</label>
+              <label for="rate-tip-fixed" class="rate-tabs__help rate-tabs__help--fixed">?</label>
+
+              <span class="rate-tip rate-tip--floating" id="tip-floating" role="tooltip">
+                <b class="rate-tip__title">Floating rate</b>
+                The rate is settled when your deposit confirms, so the amount you receive
+                follows the market between now and then &mdash; it can land above or below
+                the quote. Lower fee, less certainty.
+              </span>
+              <span class="rate-tip rate-tip--fixed" id="tip-fixed" role="tooltip">
+                <b class="rate-tip__title">Fixed rate</b>
+                The quote is locked for you, so you receive exactly the amount shown as long
+                as you send within the window. Costs a little more &mdash; that premium covers
+                the price risk.
+              </span>
             </div>
 
             <input type="checkbox" id="flip" class="sr-only" />
