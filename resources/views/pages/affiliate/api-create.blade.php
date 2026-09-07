@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Create API Key &mdash; SageSwap Affiliate')
-@section('description', 'Create a new SageSwap affiliate API key.')
+@section('title', 'Create API Token &mdash; SageSwap Affiliate')
+@section('description', 'Create a new SageSwap affiliate API token.')
 
 @section('content')
   <main class="page-main">
     <p class="section-eyebrow">AFFILIATE</p>
-    <h1 class="section-title">Create API Key</h1>
+    <h1 class="section-title">Create API Token</h1>
     <hr class="rule" />
 
     <form class="form-card form-card--narrow" action="{{ route('affiliate.api.store') }}" method="POST">
@@ -19,7 +19,7 @@
     </form>
 
     <p class="form-footnote">
-      <a href="{{ route('affiliate.api') }}" class="link-accent">Back to API keys</a>
+      <a href="{{ route('affiliate.api') }}" class="link-accent">Back to API tokens</a>
     </p>
   </main>
 @endsection

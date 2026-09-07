@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Revoke API Key &mdash; SageSwap Affiliate')
-@section('description', 'Confirm revoking a SageSwap affiliate API key.')
+@section('title', 'Revoke API Token &mdash; SageSwap Affiliate')
+@section('description', 'Confirm revoking a SageSwap affiliate API token.')
 
 @section('content')
   <main class="page-main">
     <p class="section-eyebrow">AFFILIATE</p>
-    <h1 class="section-title">Revoke API Key</h1>
+    <h1 class="section-title">Revoke API Token</h1>
     <hr class="rule" />
 
     <div class="form-card form-card--narrow">

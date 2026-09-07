@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'API &mdash; SageSwap Affiliate')
-@section('description', 'Manage your SageSwap API keys. Create, review and revoke keys from here.')
+@section('description', 'Manage your SageSwap API tokens. Create, review and revoke tokens from here.')
 
 @section('content')
   <main class="page-main">
@@ -19,7 +19,7 @@
       <a href="{{ route('support') }}" class="link-accent">support</a> - thank you!
     </p>
 
-    <p class="api-meta">API KEYS</p>
+    <p class="api-meta">API TOKENS</p>
 
     <table class="data-table data-table--ruled">
       <thead>
@@ -40,7 +40,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="3" class="is-muted">No API keys yet.</td>
+            <td colspan="3" class="is-muted">No API tokens yet.</td>
           </tr>
         @endforelse
       </tbody>

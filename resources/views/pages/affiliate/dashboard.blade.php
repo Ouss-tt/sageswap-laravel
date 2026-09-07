@@ -19,8 +19,10 @@
         <p class="aff-card__label"><span class="dot-accent">&#9679;</span> YOUR REFERRAL CODE</p>
         <p class="aff-card__code">{{ $affiliate['referral_code'] }}</p>
         <p class="aff-card__links">
-          <a href="{{ route('affiliate.api') }}" class="link-plain link-plain--wide">API KEYS</a>
-          <span class="aff-card__hint">Sageswap - API Keys &rarr;</span>
+          <a href="{{ route('affiliate.api') }}" class="aff-card__api-link">
+            <span class="link-plain link-plain--wide">API TOKENS</span>
+            <span class="aff-card__hint">Sageswap - API Tokens &rarr;</span>
+          </a>
         </p>
       </div>
 

@@ -1478,6 +1478,18 @@ table {
   color: var(--muted-foreground);
 }
 
+/* The whole row is one target, but only "API KEYS" keeps the underline so the
+   card reads exactly as it did before. Hover lights both halves, so it is
+   obvious the hint is part of the same link. */
+.aff-card__api-link {
+  color: inherit;
+}
+
+.aff-card__api-link:hover .link-plain,
+.aff-card__api-link:hover .aff-card__hint {
+  color: var(--accent);
+}
+
 .aff-links > * + * {
   margin-top: 1.25rem;
 }

@@ -119,11 +119,11 @@ class AffiliateController extends Controller
 
     public function createApiKey(Request $request): RedirectResponse
     {
-        return back()->with('status', 'API key creation is not wired up yet.');
+        return back()->with('status', 'API token creation is not wired up yet.');
     }
 
     public function revokeApiKey(string $key): RedirectResponse
     {
-        return back()->with('status', 'API key revocation is not wired up yet.');
+        return back()->with('status', 'API token revocation is not wired up yet.');
     }
 }
