@@ -14,7 +14,6 @@ Route::get('/aml_swap', [SwapController::class, 'aml'])->name('aml-swap');
 Route::post('/aml_swap', [SwapController::class, 'storeAml'])->name('aml-swap.store');
 Route::post('/aml_swap/quote', [SwapController::class, 'quoteAml'])->name('aml-swap.quote');
 
-Route::view('/help', 'pages.help')->name('help');
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/support', 'pages.support')->name('support');
 Route::view('/transparency', 'pages.transparency')->name('transparency');

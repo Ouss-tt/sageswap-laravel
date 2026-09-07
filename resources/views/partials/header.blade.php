@@ -8,7 +8,7 @@
       <a href="{{ route('affiliate.login') }}" class="btn btn--sm site-header__cta">AFFILIATE LOGIN</a>
     </div>
     <nav class="site-nav">
-      <a href="{{ route('swap') }}" @class(['site-nav__link', 'is-active' => request()->routeIs('swap', 'aml-swap', 'help')])>SWAP</a>
+      <a href="{{ route('swap') }}" @class(['site-nav__link', 'is-active' => request()->routeIs('swap', 'aml-swap')])>SWAP</a>
       <a href="{{ route('faq') }}" @class(['site-nav__link', 'is-active' => request()->routeIs('faq')])>FAQ</a>
       <a href="{{ route('support') }}" @class(['site-nav__link', 'is-active' => request()->routeIs('support')])>SUPPORT</a>
     </nav>

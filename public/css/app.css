@@ -627,8 +627,10 @@ table {
 }
 
 .swap-panel__tabs {
+  --swap-tab-pad: 0.75rem;
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .swap-panel__tab {
@@ -658,6 +660,108 @@ table {
 .swap-panel__tab.is-active:hover {
   background-color: color-mix(in oklab, var(--foreground) 85%, transparent);
   color: var(--background);
+}
+
+/* Mode explainers. Mirrors the rate-tip pattern below: hover drives it for a
+   mouse, the sr-only checkbox is what makes it reachable on a touchscreen
+   where :hover never fires. */
+.swap-panel__help {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  border: 1px solid var(--border);
+  padding-inline: 0.375rem;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.swap-panel__help--standard {
+  right: calc(50% + var(--swap-tab-pad));
+}
+
+.swap-panel__help--noaml {
+  right: var(--swap-tab-pad);
+}
+
+.swap-panel__help:hover,
+#tab-tip-standard:focus-visible ~ .swap-panel__help--standard,
+#tab-tip-noaml:focus-visible ~ .swap-panel__help--noaml,
+#tab-tip-standard:checked ~ .swap-panel__help--standard,
+#tab-tip-noaml:checked ~ .swap-panel__help--noaml {
+  border-color: var(--foreground);
+  color: var(--foreground);
+  outline: none;
+}
+
+/* The selected tab inverts to a light background, so the glyph sitting on
+   top of it has to invert with it. */
+.swap-panel__help.is-on-active {
+  border-color: color-mix(in oklab, var(--background) 45%, transparent);
+  color: var(--background);
+}
+
+.swap-panel__help.is-on-active:hover,
+#tab-tip-standard:focus-visible ~ .swap-panel__help--standard.is-on-active,
+#tab-tip-noaml:focus-visible ~ .swap-panel__help--noaml.is-on-active,
+#tab-tip-standard:checked ~ .swap-panel__help--standard.is-on-active,
+#tab-tip-noaml:checked ~ .swap-panel__help--noaml.is-on-active {
+  border-color: var(--background);
+  color: var(--background);
+}
+
+.swap-tip {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  padding: 0.875rem 1rem;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--muted-foreground);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition),
+    visibility var(--transition);
+}
+
+.swap-tip b {
+  color: var(--foreground);
+  font-weight: 400;
+}
+
+.swap-tip__title {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+.swap-panel__help--standard:hover ~ .swap-tip--standard,
+#tab-tip-standard:checked ~ .swap-tip--standard,
+.swap-tip--standard:hover,
+.swap-panel__help--noaml:hover ~ .swap-tip--noaml,
+#tab-tip-noaml:checked ~ .swap-tip--noaml,
+.swap-tip--noaml:hover {
+  opacity: 1;
+  visibility: visible;
 }
 
 .swap-panel__body {
@@ -1281,6 +1385,10 @@ table {
 
 .data-table--ruled {
   margin-top: 3rem;
+}
+
+.api-meta + .data-table--ruled {
+  margin-top: 1rem;
 }
 
 .data-table--ruled th {
@@ -2265,7 +2373,8 @@ table {
   }
 
   /* A finger needs more than an 11px glyph to aim at. */
-  .rate-tabs__help {
+  .rate-tabs__help,
+  .swap-panel__help {
     min-width: 1.75rem;
     min-height: 1.75rem;
     font-size: 12px;

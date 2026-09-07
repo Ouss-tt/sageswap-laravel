@@ -6,8 +6,8 @@
       <span class="escrow__label">ESCROW GUARANTEE</span>
     </p>
     <p class="escrow__line escrow__sub">
-      IF YOUR COINS HAVE HIGH AML, CHECK THE
-      <a href="{{ route('help') }}" class="link-plain">HELP</a> TAB
+      IF YOUR COINS HAVE HIGH AML, USE THE
+      <a href="{{ route('aml-swap') }}" class="link-plain">NO AML SWAP</a> TAB
     </p>
   </div>
 </div>

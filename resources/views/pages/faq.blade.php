@@ -16,7 +16,7 @@
 
     <div class="accordion faq-accordion">
       <x-accordion-item open question="What kind of exchange do you offer?">
-        We are a crypto-to-crypto exchange - we do not support fiat currencies. You can easily swap one cryptocurrency for another without the need for creating an account or going under verification.
+        We are a crypto to crypto exchange. We do not support fiat currencies, and no account or verification is required. Simply choose the assets you want to exchange and complete the swap.
       </x-accordion-item>
 
       <x-accordion-item question="What are your fees?">
@@ -24,52 +24,54 @@
       </x-accordion-item>
 
       <x-accordion-item question="What happens if I send the wrong amount?">
-        Always try to send the same amount as the transaction was created for. If you accidentally sent too much or too little, don&rsquo;t worry. If the transaction does not update or confirm within 10 minutes, contact support and we will definitely be able to solve your problem.
+        Nothing to worry about. If you send a different amount than the one specified, the transaction amount will automatically update, provided that the amount meets the minimum swap requirement and we have sufficient reserves to complete the exchange.
       </x-accordion-item>
 
       <x-accordion-item question="What if something goes wrong?">
         If you experience any issues during your swap, our
-        <a href="{{ route('support') }}" class="link-accent">support team</a> is ready to help.
+        <a href="{{ route('support') }}" class="link-accent">support team</a> is available to help and resolve the problem as quickly as possible.
       </x-accordion-item>
 
-      <x-accordion-item question="Do you require KYC (Know Your Customer)?">
-        No. We never require KYC under any circumstances. Your privacy is important to us, and we designed our service to be fast, anonymous, and simple.
+      <x-accordion-item question="Why is Monero the only output option for NO AML Mode?">
+        Monero provides enhanced transaction privacy by design. It is currently the only supported output asset for this swap mode.
       </x-accordion-item>
 
-      <x-accordion-item question="Do you accept stolen money?">
-        Yes and no. We accept coins with a high AML score only if the swap is carried out using <a href="{{ route('aml-swap') }}" class="link-accent">AML Swap</a> mode. If the swap is carried out using <a href="{{ route('swap') }}" class="link-accent">Standard Swap</a> mode, we will not be able to process transactions with a high AML score. For more information about swaps, we recommend visit the <a href="{{ route('help') }}" class="link-accent">Help</a> tab.
+      <x-accordion-item question="Do you require KYC?">
+        No. We do not require KYC or account verification. Our service is designed to be simple, fast, and privacy-focused.
       </x-accordion-item>
 
-      <x-accordion-item question="Do you collect any data, such as IP addresses or anything else?">
-        No, we do not collect any data - including IP addresses or any other identifying information.
+      <x-accordion-item question="Do you accept coins with a high AML risk score?">
+        Yes, but only through our <a href="{{ route('aml-swap') }}" class="link-accent">NO AML Mode</a>. For more information, see the explanation next to each mode on the swap page.
       </x-accordion-item>
 
-      <x-accordion-item question="Do successful swaps stay in your DB forever?">
-        No. For maximum privacy and security, every successful swap is automatically and permanently deleted from our database after 7 days. After this period, the transaction record is gone forever and cannot be recovered.
+      <x-accordion-item question="How long are swap records stored?">
+        Successful swaps are automatically and permanently removed from our database after 7 days. Once deleted, the records cannot be recovered.
       </x-accordion-item>
 
       <x-accordion-item question="Do you have an affiliate program?">
-        Yes! We offer a crypto affiliate program where you can earn (0.5%) commissions for referring users. Reach out the <a href="{{ route('affiliate.dashboard') }}" class="link-accent">Affiliate section</a> to get started.
+        Yes. Our affiliate program allows you to earn commissions by referring new users. Visit the
+        <a href="{{ route('affiliate.dashboard') }}" class="link-accent">Affiliate section</a> for more information.
       </x-accordion-item>
 
       <x-accordion-item question="Do you have your own reserves and infrastructure?">
-        Yes, we have our own coin reserves and our own infrastructure.
+        Yes. We operate our own cryptocurrency reserves and infrastructure.
       </x-accordion-item>
 
-      <x-accordion-item question="I lost my UUID. Can you help me?">
-        Unfortunately, we cannot help you recover your account. We do not have the tools to assist you in this matter.
+      <x-accordion-item question="Do you collect any personal or device information?">
+        No.
+      </x-accordion-item>
+
+      <x-accordion-item question="I lost my UUID. Can you help me recover it?">
+        Unfortunately, we cannot recover lost UUIDs.
       </x-accordion-item>
 
       <x-accordion-item question="How long does a swap take?">
-        Most swaps are completed within 5-30 minutes, depending on network conditions and confirmation times. Some assets may take longer due to chain congestion or technical issues.
+        Most swaps are completed within 5-30 minutes. Processing time depends mainly on blockchain confirmations and current network conditions. Some transactions may take longer during periods of network congestion.
       </x-accordion-item>
 
-      <x-accordion-item question="Why does the website look so basic? There are no fancy colors, notifications, or anything.">
-        Our website does not require JavaScript! On our website, you are safe from any tracking or annoying notifications. You come in, swap, and leave!
-      </x-accordion-item>
-
-      <x-accordion-item question="How can I contact with you?">
-        You can reach us via Telegram, Session and E-mail.
+      <x-accordion-item question="How can I contact support?">
+        You can contact our support team via Telegram, Session, or email. Visit the
+        <a href="{{ route('support') }}" class="link-accent">Support section</a> to find our current contact details.
       </x-accordion-item>
     </div>
 

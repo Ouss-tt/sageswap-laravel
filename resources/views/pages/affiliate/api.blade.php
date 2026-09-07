@@ -9,9 +9,7 @@
     <h1 class="section-title">API</h1>
     <hr class="rule" />
 
-    <p class="api-meta api-meta--first">API KEYS</p>
-
-    <p class="api-meta">
+    <p class="api-meta api-meta--first">
       API DOCS:
       <a href="#" class="link-accent api-meta__link">Sageswap - API docs</a>
     </p>
@@ -20,6 +18,8 @@
       If you encounter any errors, please report them to
       <a href="{{ route('support') }}" class="link-accent">support</a> - thank you!
     </p>
+
+    <p class="api-meta">API KEYS</p>
 
     <table class="data-table data-table--ruled">
       <thead>
