@@ -941,7 +941,7 @@ table {
   display: flex;
   align-items: center;
   height: 46px;
-  width: 200px;
+  width: 224px;
   flex-shrink: 0;
   border: 1px solid var(--border);
   background-color: var(--background);
@@ -982,10 +982,35 @@ table {
   display: none;
 }
 
+/* Only the selected coin's glyph is shown. CSS cannot correlate the checked
+   option with a sibling attribute, so there is one pair per coin; keep this
+   list in step with config/coins.php. */
 .coin-field:has(option[value="btc"]:checked) .coin-field__icon[data-coin="btc"],
+.coin-field:has(option[value="bch"]:checked) .coin-field__icon[data-coin="bch"],
 .coin-field:has(option[value="eth"]:checked) .coin-field__icon[data-coin="eth"],
+.coin-field:has(option[value="dash"]:checked) .coin-field__icon[data-coin="dash"],
+.coin-field:has(option[value="usddtrc20"]:checked) .coin-field__icon[data-coin="usddtrc20"],
+.coin-field:has(option[value="usdderc20"]:checked) .coin-field__icon[data-coin="usdderc20"],
+.coin-field:has(option[value="usdttrc20"]:checked) .coin-field__icon[data-coin="usdttrc20"],
+.coin-field:has(option[value="usdterc20"]:checked) .coin-field__icon[data-coin="usdterc20"],
+.coin-field:has(option[value="usdtsol"]:checked) .coin-field__icon[data-coin="usdtsol"],
+.coin-field:has(option[value="usdtbsc"]:checked) .coin-field__icon[data-coin="usdtbsc"],
+.coin-field:has(option[value="usdtarb"]:checked) .coin-field__icon[data-coin="usdtarb"],
+.coin-field:has(option[value="usdtmatic"]:checked) .coin-field__icon[data-coin="usdtmatic"],
+.coin-field:has(option[value="trx"]:checked) .coin-field__icon[data-coin="trx"],
+.coin-field:has(option[value="usdcerc20"]:checked) .coin-field__icon[data-coin="usdcerc20"],
+.coin-field:has(option[value="usdcsol"]:checked) .coin-field__icon[data-coin="usdcsol"],
+.coin-field:has(option[value="usdcbsc"]:checked) .coin-field__icon[data-coin="usdcbsc"],
+.coin-field:has(option[value="usdcarb"]:checked) .coin-field__icon[data-coin="usdcarb"],
+.coin-field:has(option[value="usdcmatic"]:checked) .coin-field__icon[data-coin="usdcmatic"],
+.coin-field:has(option[value="ton"]:checked) .coin-field__icon[data-coin="ton"],
+.coin-field:has(option[value="xrp"]:checked) .coin-field__icon[data-coin="xrp"],
+.coin-field:has(option[value="sol"]:checked) .coin-field__icon[data-coin="sol"],
 .coin-field:has(option[value="ltc"]:checked) .coin-field__icon[data-coin="ltc"],
-.coin-field:has(option[value="usdt"]:checked) .coin-field__icon[data-coin="usdt"],
+.coin-field:has(option[value="dai"]:checked) .coin-field__icon[data-coin="dai"],
+.coin-field:has(option[value="doge"]:checked) .coin-field__icon[data-coin="doge"],
+.coin-field:has(option[value="bnb"]:checked) .coin-field__icon[data-coin="bnb"],
+.coin-field:has(option[value="zano"]:checked) .coin-field__icon[data-coin="zano"],
 .coin-field:has(option[value="xmr"]:checked) .coin-field__icon[data-coin="xmr"] {
   display: block;
 }
@@ -2169,11 +2194,13 @@ table {
   }
 
   /* The coin picker was a fixed 200px and refused to shrink, which left the
-     amount input at 0-26px wide. Let it give way instead. */
+     amount input at 0-26px wide. Let it give way instead — 180px is what the
+     longest names ("Litecoin (Litecoin)", "Dogecoin (Dogecoin)") need once the
+     glyph steps aside. */
   .coin-field {
-    width: 156px;
+    width: 180px;
     min-width: 0;
-    flex: 0 0 156px;
+    flex: 0 0 180px;
   }
 
   /* The coin glyph costs 44px of padding, which is what was clipping

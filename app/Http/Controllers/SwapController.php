@@ -13,21 +13,71 @@ class SwapController extends Controller
     /** How long a deposit window stays open. */
     private const DEPOSIT_WINDOW_MINUTES = 60;
 
-    /** Demo deposit addresses, one per coin the swap form accepts. */
-    private const DEPOSIT_ADDRESSES = [
-        'btc' => 'bc1qhwwe3cpdfz99t9tgdks2j3pnfqqqy3q0ltcckp',
-        'eth' => '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-        'ltc' => 'ltc1qd6xyu9wzhuwrxr3vwq8dxewsdmt6dnp9vzjsxc',
-        'usdt' => '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-        'xmr' => '4B6obxRSasr81nBZPEZPg3inzPoXBYtn2RPjSZmtTVrb2HXynnM9W61GKCGsKySRe4d3hZnDzdymGdATY',
+    /**
+     * Which chain each menu entry settles on.
+     *
+     * A token that trades on several networks needs a deposit address per
+     * network, so the coin keys from config/coins.php collapse to a chain here
+     * and the address, scheme and QR payload all hang off that.
+     */
+    private const COIN_CHAINS = [
+        'btc' => 'bitcoin',
+        'bch' => 'bitcoincash',
+        'eth' => 'ethereum',
+        'dash' => 'dash',
+        'usddtrc20' => 'tron',
+        'usdderc20' => 'ethereum',
+        'usdttrc20' => 'tron',
+        'usdterc20' => 'ethereum',
+        'usdtsol' => 'solana',
+        'usdtbsc' => 'bsc',
+        'usdtarb' => 'arbitrum',
+        'usdtmatic' => 'polygon',
+        'trx' => 'ethereum',
+        'usdcerc20' => 'ethereum',
+        'usdcsol' => 'solana',
+        'usdcbsc' => 'bsc',
+        'usdcarb' => 'arbitrum',
+        'usdcmatic' => 'polygon',
+        'ton' => 'ton',
+        'xrp' => 'xrp',
+        'sol' => 'solana',
+        'ltc' => 'litecoin',
+        'dai' => 'ethereum',
+        'doge' => 'dogecoin',
+        'bnb' => 'bsc',
+        'zano' => 'zano',
+        'xmr' => 'monero',
     ];
 
-    /** URI schemes used when building the deposit QR payload. */
+    /** Demo deposit addresses, one per chain the swap form accepts. */
+    private const DEPOSIT_ADDRESSES = [
+        'bitcoin' => 'bc1qhwwe3cpdfz99t9tgdks2j3pnfqqqy3q0ltcckp',
+        'bitcoincash' => 'qzm47qz5ue99y9yl4aca7jnz7dwgdenl85jkfx3znl',
+        'ethereum' => '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+        'bsc' => '0x8894E0a0c962CB723c1976a4421c95949bE2D4E3',
+        'arbitrum' => '0x489A8756C18C0b8B24EC2a2b9FF3D4d447F79BEc',
+        'polygon' => '0xF977814e90dA44bFA03b6295A0616a897441aceC',
+        'dash' => 'XdTLBRbnQTGnrxQAn7VtGmqLpm4WcZZTjq',
+        'tron' => 'TQ5NMqJjrDkxT4h1u1Vd8Pu5aiZLhWDPpF',
+        'solana' => '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
+        'ton' => 'UQAvDfWFG0oYX19jwNDNBBL1rKNT9XfaGP9HyTb5nb2Eml6y',
+        'xrp' => 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh',
+        'litecoin' => 'ltc1qd6xyu9wzhuwrxr3vwq8dxewsdmt6dnp9vzjsxc',
+        'dogecoin' => 'DH5yaieqoZN36fDVciNyRueRGvGLR3mr7L',
+        'zano' => 'ZxCbT9dJrRhtP5aVKmQ8yLnW3fEuHgSdX2qYkA6NpMvZ4TjB7cRwUeF1iGoK9sLxDn5YhQaW8ZmVbCtJrP3XeNdS2AkGuHy',
+        'monero' => '4B6obxRSasr81nBZPEZPg3inzPoXBYtn2RPjSZmtTVrb2HXynnM9W61GKCGsKySRe4d3hZnDzdymGdATY',
+    ];
+
+    /** URI schemes used when building the deposit QR payload, keyed by chain. */
     private const URI_SCHEMES = [
-        'btc' => 'bitcoin',
-        'eth' => 'ethereum',
-        'ltc' => 'litecoin',
-        'xmr' => 'monero',
+        'bitcoin' => 'bitcoin',
+        'bitcoincash' => 'bitcoincash',
+        'ethereum' => 'ethereum',
+        'dash' => 'dash',
+        'litecoin' => 'litecoin',
+        'dogecoin' => 'dogecoin',
+        'monero' => 'monero',
     ];
     public function index(): View
     {
@@ -153,7 +203,8 @@ class SwapController extends Controller
         $elapsed = (int) floor((now()->timestamp - $openedAt) / 60);
         $minutesLeft = max(0, self::DEPOSIT_WINDOW_MINUTES - $elapsed);
 
-        $depositAddress = self::DEPOSIT_ADDRESSES[$sendCoin] ?? self::DEPOSIT_ADDRESSES['btc'];
+        $sendChain = self::COIN_CHAINS[$sendCoin] ?? 'bitcoin';
+        $depositAddress = self::DEPOSIT_ADDRESSES[$sendChain];
 
         return [
             'id' => $id,
@@ -164,23 +215,23 @@ class SwapController extends Controller
             'receive_amount' => $receiveAmount,
             'receive_coin' => $receiveCoin,
             'receive_coin_label' => $coins[$receiveCoin] ?? $coins['xmr'],
-            'payout_address' => $swap['address'] ?? self::DEPOSIT_ADDRESSES['xmr'],
+            'payout_address' => $swap['address'] ?? self::DEPOSIT_ADDRESSES[self::COIN_CHAINS[$receiveCoin] ?? 'monero'],
             'deposit_address' => $depositAddress,
             'minutes_left' => $minutesLeft,
-            'qr' => QrCode::svg($this->depositUri($sendCoin, $depositAddress, $sendAmount)),
+            'qr' => QrCode::svg($this->depositUri($sendChain, $depositAddress, $sendAmount)),
         ];
     }
 
     /**
      * A wallet-friendly payment URI, falling back to the bare address for
-     * coins without a registered scheme.
+     * chains without a registered scheme.
      */
-    private function depositUri(string $coin, string $address, string $amount): string
+    private function depositUri(string $chain, string $address, string $amount): string
     {
-        if (! isset(self::URI_SCHEMES[$coin])) {
+        if (! isset(self::URI_SCHEMES[$chain])) {
             return $address;
         }
 
-        return self::URI_SCHEMES[$coin].':'.$address.'?amount='.$amount;
+        return self::URI_SCHEMES[$chain].':'.$address.'?amount='.$amount;
     }
 }
