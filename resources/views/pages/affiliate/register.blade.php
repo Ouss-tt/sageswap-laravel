@@ -27,7 +27,7 @@
           <span class="copy-row__value">{{ session('uuid') }}</span>
         </div>
         <div class="form-card__spacer">
-          <label class="field-label">PASSWORD</label>
+          <label class="field-label">Refferal Code</label>
           <div class="copy-row">
             <span class="copy-row__value">{{ session('password') }}</span>
           </div>
