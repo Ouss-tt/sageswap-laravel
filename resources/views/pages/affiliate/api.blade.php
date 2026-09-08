@@ -11,7 +11,7 @@
 
     <p class="api-meta api-meta--first">
       API DOCS:
-      <a href="#" class="link-accent api-meta__link">Sageswap - API docs</a>
+      <a href="https://docs.sageswap.io/" class="link-accent api-meta__link">Sageswap - API docs</a>
     </p>
 
     <p class="api-note">
