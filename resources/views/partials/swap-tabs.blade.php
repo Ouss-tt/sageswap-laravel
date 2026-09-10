@@ -5,7 +5,7 @@
   <input type="checkbox" id="tab-tip-standard" class="sr-only" aria-label="Explain Standard Swap" aria-describedby="tip-standard" />
   <input type="checkbox" id="tab-tip-noaml" class="sr-only" aria-label="Explain NO AML Mode" aria-describedby="tip-noaml" />
 
-  <a href="{{ route('swap') }}" @class(['swap-panel__tab', 'is-active' => request()->routeIs('swap')])>SWAP</a>
+  <a href="{{ route('swap') }}" @class(['swap-panel__tab', 'is-active' => request()->routeIs('swap')])>STANDARD SWAP</a>
   <a href="{{ route('aml-swap') }}" @class(['swap-panel__tab', 'is-active' => request()->routeIs('aml-swap')])>NO AML SWAP MODE</a>
 
   <label for="tab-tip-standard"
