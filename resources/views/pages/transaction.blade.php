@@ -7,13 +7,7 @@
   <main class="page-main">
     <div class="page-heading page-heading--centered">
       <p class="page-heading__eyebrow">TRANSACTION</p>
-      <h1 class="page-heading__title">Awaiting your<br />deposit</h1>
-      <div class="page-heading__subtitle">
-        Send the exact amount shown below. The swap starts on its own as soon as
-        your deposit is seen on the network.
-      </div>
     </div>
-
     <div class="form-card">
       <div class="tx-legs">
         <div class="tx-leg">
