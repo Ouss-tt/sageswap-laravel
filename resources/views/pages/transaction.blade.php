@@ -8,6 +8,11 @@
     <div class="page-heading page-heading--centered">
       <p class="page-heading__eyebrow">TRANSACTION</p>
     </div>
+
+    <p @class(['tx-mode', 'tx-mode--aml' => $transaction['mode'] === 'aml'])>
+      <span class="tx-mode__dot" aria-hidden="true">&#9679;</span>
+      <span class="tx-mode__label">{{ $transaction['mode_label'] }}</span>
+    </p>
     <div class="form-card">
       <div class="tx-legs">
         <div class="tx-leg">

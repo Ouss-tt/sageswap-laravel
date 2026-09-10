@@ -13,6 +13,12 @@ class SwapController extends Controller
     /** How long a deposit window stays open. */
     private const DEPOSIT_WINDOW_MINUTES = 60;
 
+    /** The two swap modes, as they are labelled on the swap tabs. */
+    private const MODE_LABELS = [
+        'standard' => 'STANDARD SWAP',
+        'aml' => 'NO AML SWAP MODE',
+    ];
+
     /**
      * Which chain each menu entry settles on.
      *
@@ -108,7 +114,7 @@ class SwapController extends Controller
 
         return $this->openTransaction($request->only([
             'send_amount', 'send_coin', 'receive_amount', 'receive_coin', 'address',
-        ]));
+        ]) + ['mode' => 'standard']);
     }
 
     public function quote(Request $request): RedirectResponse
@@ -157,7 +163,7 @@ class SwapController extends Controller
 
         return $this->openTransaction($request->only([
             'send_amount', 'send_coin', 'address',
-        ]) + ['receive_coin' => 'xmr']);
+        ]) + ['receive_coin' => 'xmr', 'mode' => 'aml']);
     }
 
     /**
@@ -197,6 +203,8 @@ class SwapController extends Controller
         $sendAmount = $swap['send_amount'] ?? '0.001';
         $receiveAmount = $swap['receive_amount'] ?? '0.14437924';
 
+        $mode = isset(self::MODE_LABELS[$swap['mode'] ?? '']) ? $swap['mode'] : 'standard';
+
         $openedAt = session()->get("transactions.$id", now()->timestamp);
         session()->put("transactions.$id", $openedAt);
 
@@ -209,6 +217,8 @@ class SwapController extends Controller
         return [
             'id' => $id,
             'status' => $minutesLeft > 0 ? 'NEW' : 'EXPIRED',
+            'mode' => $mode,
+            'mode_label' => self::MODE_LABELS[$mode],
             'send_amount' => $sendAmount,
             'send_coin' => $sendCoin,
             'send_coin_label' => $coins[$sendCoin] ?? $coins['btc'],
