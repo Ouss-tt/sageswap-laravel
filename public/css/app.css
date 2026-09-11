@@ -245,7 +245,10 @@ table {
 .site-footer__mirrors,
 .site-footer__link {
   display: none;
-  transition: color var(--transition);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color var(--transition), text-decoration-color var(--transition);
 }
 
 .site-footer__link {
@@ -255,6 +258,7 @@ table {
 .site-footer__mirrors:hover,
 .site-footer__link:hover {
   color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
 .site-footer__social {
