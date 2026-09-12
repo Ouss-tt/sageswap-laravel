@@ -38,6 +38,15 @@
       </div>
 
       <div class="support-notice">
+        <p class="support-notice__title">NO REPLY TO YOUR E-MAIL?</p>
+        <p class="support-notice__body">
+          If you haven't received a reply to your e-mail from us within 24 hours, it's likely
+          that we're unable to respond because your e-mail provider has blocked us. Please try
+          contacting us again using another available method of communication.
+        </p>
+      </div>
+
+      <div class="support-notice">
         <p class="support-notice__title">LAW ENFORCEMENT NOTICE</p>
         <p class="support-notice__body">
           For Law Enforcement, please be advised that we will not be providing any information.
