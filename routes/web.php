@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\PressController;
 use App\Http\Controllers\SwapController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ Route::post('/aml_swap/quote', [SwapController::class, 'quoteAml'])->name('aml-s
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/support', 'pages.support')->name('support');
 Route::view('/transparency', 'pages.transparency')->name('transparency');
+Route::get('/press', [PressController::class, 'show'])->name('press');
 
 Route::prefix('affiliate')->name('affiliate.')->group(function () {
     Route::get('/', [AffiliateController::class, 'dashboard'])->name('dashboard');
@@ -40,4 +42,10 @@ Route::prefix('affiliate')->name('affiliate.')->group(function () {
 
 if (app()->environment('local')) {
     Route::view('/_preview/500', 'errors.500');
+
+    // Until a backend moves a swap through its lifecycle, this is the only way
+    // to see the transaction page in each status. Any code is accepted so the
+    // unmapped-status fallback can be checked too.
+    Route::get('/_preview/transaction/{status}', [SwapController::class, 'preview'])
+        ->name('transaction.preview');
 }

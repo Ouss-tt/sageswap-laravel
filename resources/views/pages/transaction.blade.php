@@ -57,8 +57,11 @@
       <div class="tx-status">
         <div>
           <p class="field-label">TRANSACTION STATUS</p>
-          <p class="tx-status__value">
-            <span class="dot-accent">&#9679;</span> {{ $transaction['status'] }}
+          {{-- The tone comes from TransactionStatus, so the only classes this
+               can build are the .tx-state--* set defined in app.css. --}}
+          <p class="tx-status__value tx-state tx-state--{{ $transaction['status']['tone'] }}">
+            <span class="tx-state__dot" aria-hidden="true">&#9679;</span>
+            {{ $transaction['status']['label'] }}
           </p>
         </div>
         <div class="tx-status__meta">
@@ -67,16 +70,33 @@
         </div>
       </div>
 
-      @if ($transaction['status'] === 'EXPIRED')
-        <div class="notice notice--danger">
-          <p class="notice__title">This deposit window has closed.</p>
-          <p class="notice__body">
-            Do not send to the address below &mdash; the rate is no longer held.
-            <a href="{{ route('swap') }}" class="link-accent">Start a new swap</a>
-            to get a fresh address.
+      @include('partials.tx-status-notice')
+
+      {{-- The payout hash, on a settled swap only. Driven by the status flag
+           rather than a status code so this stays consistent with how the
+           deposit block is gated, and guarded on a value so a settled swap
+           with no hash yet shows nothing instead of an empty box. --}}
+      @if ($transaction['status']['payout'] && $transaction['payout_txid'])
+        <div class="form-card__spacer">
+          <p class="field-label">PAYOUT TRANSACTION ID (TXID)</p>
+          <div class="copy-row copy-row--address">
+            <span class="copy-row__value copy-row__value--wrap tx-txid">{{ $transaction['payout_txid'] }}</span>
+          </div>
+          {{-- The coin label is deliberately not interpolated here: several
+               entries in config/coins.php repeat the name instead of the
+               ticker ("Monero (Monero)"), which reads badly mid-sentence. --}}
+          <p class="tx-txid__hint">
+            Look this up on a block explorer to confirm the payout on-chain.
           </p>
         </div>
-      @else
+      @endif
+
+      {{-- Deposit instructions are an allowlist, not an exception list: they
+           belong to the one status that is still waiting to be paid. Any other
+           status - including one this front end has never heard of - must not
+           show an amount, an address or a QR code, because the visitor has
+           either paid already or has nothing left to pay. --}}
+      @if ($transaction['status']['deposit'])
         <p class="tx-instruction">
           Send <span class="tx-instruction__amount">{{ $transaction['send_amount'] }}</span>
           {{ $transaction['send_coin_label'] }} to the following address:
@@ -95,15 +115,17 @@
           <div class="tx-qr__plate">{!! $transaction['qr'] !!}</div>
           <p class="tx-qr__hint">Scan to pay from a wallet app</p>
         </div>
-      @endif
 
-      <div class="notice">
-        <p class="notice__title">Send only {{ $transaction['send_coin_label'] }} to this address.</p>
-        <p class="notice__body">
-          Anything else is lost on arrival. Every swap is escrowed, and the fee is
-          already inside the quoted rate.
-        </p>
-      </div>
+        {{-- Part of the deposit instructions: there is no "this address" to
+             warn about once the address is gone. --}}
+        <div class="notice">
+          <p class="notice__title">Send only {{ $transaction['send_coin_label'] }} to this address.</p>
+          <p class="notice__body">
+            Anything else is lost on arrival. Every swap is escrowed, and the fee is
+            already inside the quoted rate.
+          </p>
+        </div>
+      @endif
 
       <div class="tx-actions">
         <a href="{{ route('transparency') }}" class="link-accent">Letter of Guarantee</a>
@@ -111,9 +133,11 @@
       </div>
     </div>
 
-    <p class="form-footnote">
-      Deposit not showing up?
-      <a href="{{ route('support') }}" class="link-accent">Contact support</a>
-    </p>
+    @if ($transaction['status']['deposit'])
+      <p class="form-footnote">
+        Deposit not showing up?
+        <a href="{{ route('support') }}" class="link-accent">Contact support</a>
+      </p>
+    @endif
   </main>
 @endsection

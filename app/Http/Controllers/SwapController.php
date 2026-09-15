@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Support\QrCode;
+use App\Support\TransactionStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -12,6 +13,9 @@ class SwapController extends Controller
 {
     /** How long a deposit window stays open. */
     private const DEPOSIT_WINDOW_MINUTES = 60;
+
+    /** Fixed id for the local status preview, so its countdown holds still. */
+    private const PREVIEW_ID = '00000000-0000-4000-8000-000000000000';
 
     /** The two swap modes, as they are labelled on the swap tabs. */
     private const MODE_LABELS = [
@@ -189,6 +193,25 @@ class SwapController extends Controller
     }
 
     /**
+     * Render the transaction page pinned to one status.
+     *
+     * Nothing moves a swap through its lifecycle yet, so this is how the states
+     * get reviewed. Unrecognised codes are allowed through on purpose: seeing
+     * TransactionStatus::fallback() render is the point of testing it.
+     */
+    public function preview(string $status): View
+    {
+        abort_unless(app()->environment('local'), 404);
+
+        return view('pages.transaction', [
+            'transaction' => $this->transaction(
+                self::PREVIEW_ID,
+                ['status' => $status] + session('swap', [])
+            ),
+        ]);
+    }
+
+    /**
      * Build the transaction shown on the status page.
      *
      * The deposit window is anchored in the session so the countdown actually
@@ -214,9 +237,15 @@ class SwapController extends Controller
         $sendChain = self::COIN_CHAINS[$sendCoin] ?? 'bitcoin';
         $depositAddress = self::DEPOSIT_ADDRESSES[$sendChain];
 
+        // A status handed to us by the backend always wins; the deposit clock
+        // only decides the status while nothing upstream has an opinion.
+        $status = TransactionStatus::resolve(
+            $swap['status'] ?? ($minutesLeft > 0 ? 'new' : 'expired')
+        );
+
         return [
             'id' => $id,
-            'status' => $minutesLeft > 0 ? 'NEW' : 'EXPIRED',
+            'status' => $status,
             'mode' => $mode,
             'mode_label' => self::MODE_LABELS[$mode],
             'send_amount' => $sendAmount,
@@ -227,6 +256,15 @@ class SwapController extends Controller
             'receive_coin_label' => $coins[$receiveCoin] ?? $coins['xmr'],
             'payout_address' => $swap['address'] ?? self::DEPOSIT_ADDRESSES[self::COIN_CHAINS[$receiveCoin] ?? 'monero'],
             'deposit_address' => $depositAddress,
+            // The on-chain hash of the payout, which is what lets someone
+            // verify on a block explorer that they were actually paid. It is
+            // not the transaction id above - that one is ours, and means
+            // nothing to an explorer.
+            //
+            // Backend supplies it as payout_txid. The demo value is derived
+            // from the swap id so it is the right shape and stays put across
+            // refreshes, the same way the demo addresses do.
+            'payout_txid' => $swap['payout_txid'] ?? hash('sha256', $id),
             'minutes_left' => $minutesLeft,
             'qr' => QrCode::svg($this->depositUri($sendChain, $depositAddress, $sendAmount)),
         ];

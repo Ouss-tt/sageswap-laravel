@@ -6,6 +6,11 @@
   --surface: oklch(0.178 0 0);
   --surface-2: oklch(0.21 0 0);
   --muted-foreground: oklch(0.68 0 0);
+  /* Secondary text that is read as prose rather than scanned as a label.
+     --muted-foreground only just clears AA on the page background (6.9:1),
+     which is fine for a one-word field label and tiring for a paragraph;
+     this clears AAA (9.9:1). */
+  --text-muted: oklch(0.78 0 0);
   --accent: oklch(0.89 0.21 122);
   --border: oklch(0.32 0 0);
   --danger: #ff0000;
@@ -2250,6 +2255,23 @@ table {
   color: var(--foreground);
 }
 
+
+
+/* A payout hash is 64 characters of meaningless-looking hex, so it is set to
+   be selected in one go rather than read. */
+.tx-txid {
+  user-select: all;
+}
+
+.tx-txid__hint {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
 .tx-qr {
   margin-top: 2rem;
   display: flex;
@@ -2276,6 +2298,54 @@ table {
 
 .notice--danger {
   border-left-color: var(--danger);
+}
+
+.notice--warning {
+  border-left-color: var(--warning);
+}
+
+.notice--neutral {
+  border-left-color: var(--border);
+}
+
+/* One tone name drives the status line and the notice under it, so a status
+   only ever names a colour in TransactionStatus and never in a view. */
+.tx-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tx-state__dot {
+  flex: none;
+  font-size: 0.45em;
+  line-height: 1;
+}
+
+.tx-state--accent {
+  color: var(--accent);
+}
+
+.tx-state--warning {
+  color: var(--warning);
+}
+
+.tx-state--danger {
+  color: var(--danger);
+}
+
+.tx-state--neutral {
+  color: var(--foreground);
+}
+
+/* An in-flight swap needs no colour shouting at the visitor; the dot carries
+   the state and the label stays plain. */
+.tx-state--neutral .tx-state__dot {
+  color: var(--muted-foreground);
+}
+
+.tx-support {
+  margin-top: 1.5rem;
 }
 
 .tx-actions {
@@ -2478,5 +2548,559 @@ table {
 
   .site-nav__link {
     font-size: 13px;
+  }
+}
+
+/* Press kit
+   ---------
+   Two tiers of type, and the split is the whole readability story:
+
+     PROSE  - anything read as a sentence: the intro, section notes, asset
+              descriptions, usage rules. Questrial, 16-18px, no tracking,
+              generous leading, --text-muted for AAA contrast, and a measure
+              capped near 66 characters.
+
+     DATA   - anything scanned rather than read: asset ids, hex values, pixel
+              dimensions, format chips, field labels. JetBrains Mono, never
+              below 12px, tracking pulled back to 0.04-0.1em.
+
+   Every secondary colour here is --text-muted rather than
+   --muted-foreground: hierarchy comes from size, case and the accent, not
+   from dimming text until it is hard to read.
+
+   The site's body font is mono, which suits a swap form of labels and
+   addresses but fights a page with real paragraphs on it, so prose here opts
+   back into the display face. Nothing sits below 11px and nothing decorative
+   is set in mono at a size it cannot carry. */
+
+/* The intro paragraph, overriding the shared page-heading rule: mono at 15px
+   is the hardest thing on the page to read and it is the first thing anyone
+   reads. */
+.press-main .page-heading__subtitle {
+  max-width: 34rem;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.press-spec {
+  margin: 3rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--border);
+}
+
+.press-spec__item {
+  border-bottom: 1px solid var(--border);
+  padding: 1.125rem 1.25rem;
+}
+
+.press-spec__item:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.press-spec__item:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.press-spec__key {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.press-spec__value {
+  margin: 0.5rem 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+/* The one loud block on the page, and the thing most press users came for. */
+.press-kit {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border: 1px solid var(--accent);
+  background-color: var(--accent);
+  color: var(--background);
+  padding: 1.625rem 1.5rem;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.press-kit:hover {
+  background-color: transparent;
+  color: var(--accent);
+}
+
+.press-kit__text {
+  display: block;
+}
+
+.press-kit__label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 3.5vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.press-kit__meta {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  /* Dark ink on the lime block, so opacity is the contrast control here. */
+  opacity: 0.8;
+}
+
+.press-kit__icon {
+  flex: none;
+}
+
+.press-section {
+  margin-top: 5.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2.25rem;
+}
+
+.press-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.875rem;
+}
+
+.press-section__index {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.press-section__title {
+  font-size: clamp(1.625rem, 4vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.press-section__note {
+  max-width: 34rem;
+  margin: 0.875rem 0 0;
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.press-fields {
+  margin-top: 1.25rem;
+}
+
+.press-field .field-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.press-field {
+  border-bottom: 1px solid var(--border);
+  padding-block: 1.625rem;
+}
+
+/* The next section draws its own top rule, so a trailing one here would read
+   as a double line. */
+.press-field:last-child,
+.press-type__row:last-child {
+  border-bottom: 0;
+}
+
+/* An address is data: mono is correct, and it is sized to be copied by eye. */
+.press-field__value {
+  margin: 0.625rem 0 0;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  word-break: break-all;
+  user-select: all;
+}
+
+.press-grid {
+  margin-top: 2.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.press-asset {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+}
+
+.press-asset__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.875rem 1.125rem;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.press-asset__id {
+  color: var(--accent);
+}
+
+.press-asset__dims {
+  color: var(--text-muted);
+}
+
+/* Two grounds side by side: the mark has to be judged on both before anyone
+   downloads it, and this site only ever shows it on the dark one.
+
+   The explicit minmax track matters: a grid item's automatic minimum size is
+   its intrinsic height, which lets a portrait asset stretch the row and beat
+   aspect-ratio. Capping the track keeps every plate square whatever shape the
+   client uploads. */
+.press-plates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.press-plate {
+  position: relative;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 1.75rem 1.75rem 2.5rem;
+}
+
+.press-plate img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.press-plate--dark {
+  background-color: var(--background);
+  border-right: 1px solid var(--border);
+}
+
+.press-plate--light {
+  background-color: #ffffff;
+}
+
+.press-plate__tag {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.875rem;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.press-plate--dark .press-plate__tag {
+  color: var(--text-muted);
+}
+
+/* Matching the dark plate's contrast, inverted: #6B6B6B on white is 5.8:1,
+   where the #989898 used before was an unreadable 2.5:1. */
+.press-plate--light .press-plate__tag {
+  color: #6b6b6b;
+}
+
+/* Screenshots carry their own background, so they get one plate, not two. */
+.press-shot {
+  display: grid;
+  place-items: center;
+  background-color: var(--background);
+  padding: 1.5rem;
+}
+
+.press-shot img {
+  max-width: 100%;
+  height: auto;
+}
+
+.press-asset__body {
+  flex: 1;
+  padding: 1.375rem 1.125rem 1.5rem;
+}
+
+.press-asset__name {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.press-asset__note {
+  max-width: 34rem;
+  margin: 0.625rem 0 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.press-asset__downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border);
+  padding: 1.125rem;
+}
+
+.press-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  padding: 0.6875rem 1rem;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.press-download:hover {
+  border-color: var(--accent);
+  background-color: color-mix(in oklab, var(--accent) 12%, transparent);
+}
+
+/* The format is the whole point of the chip now that file sizes are gone, so
+   it carries a little weight of its own. */
+.press-download__format {
+  font-weight: 500;
+}
+
+.press-swatches {
+  margin-top: 2.25rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.press-swatch {
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+}
+
+.press-swatch__chip {
+  aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--border);
+}
+
+.press-swatch__body {
+  padding: 1.125rem 1.25rem 1.25rem;
+}
+
+.press-swatch__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+/* The value someone is here to copy, so it gets the most weight of the three. */
+.press-swatch__hex {
+  margin: 0.75rem 0 0;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: var(--foreground);
+  user-select: all;
+}
+
+/* At phone width a swatch cell is about 130px, which is narrower than
+   "RGB 152, 152, 152" and "--muted-foreground" at this size. They wrap on
+   their own spaces and hyphens, and this is the belt and braces. */
+.press-swatch__rgb,
+.press-swatch__token {
+  margin: 0.375rem 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.press-type {
+  margin-top: 2.25rem;
+}
+
+.press-type__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-block: 2rem;
+}
+
+.press-type__role {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.press-type__sample {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.press-type__meta {
+  align-self: center;
+}
+
+.press-type__family {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.press-type__note {
+  margin: 0.625rem 0 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
+/* A CSS font stack is code, so it stays mono however long it is. */
+.press-type__stack {
+  margin: 0.625rem 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.press-rules {
+  margin-top: 2.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+
+.press-rules__title {
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.875rem;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+
+.press-rules__title--do {
+  color: var(--accent);
+}
+
+.press-rules__title--dont {
+  color: var(--danger);
+}
+
+.press-rules__list {
+  margin: 1.375rem 0 0;
+  padding-left: 1.25rem;
+  max-width: 34rem;
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.press-rules__list li + li {
+  margin-top: 0.625rem;
+}
+
+.press-rules__list li {
+  padding-left: 0.375rem;
+}
+
+.press-rules__list li::marker {
+  color: var(--accent);
+}
+
+.press-rules__list--dont li::marker {
+  color: var(--danger);
+}
+
+.press-empty {
+  margin-top: 2.25rem;
+  border: 1px solid var(--border);
+  padding: 2.5rem 2rem;
+  font-family: var(--font-display);
+  font-size: 17px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+@media (min-width: 640px) {
+  .press-rules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+  }
+
+  .press-swatches {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .press-spec {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .press-spec__item {
+    border-bottom: 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .press-spec__item:last-child {
+    border-right: 0;
+  }
+
+  .press-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .press-type__row {
+    grid-template-columns: 5.5rem minmax(0, 1fr) 17rem;
+    gap: 2rem;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1280px) {
+  .press-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .press-swatches {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
