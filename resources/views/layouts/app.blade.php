@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Questrial&family=JetBrains+Mono:wght@300;400;500;700&display=swap" />
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+    @stack('head')
   </head>
   <body>
     <div class="page">

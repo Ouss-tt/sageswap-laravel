@@ -2255,6 +2255,104 @@ table {
   color: var(--foreground);
 }
 
+/* Outside the deposit instructions the row is a section of its own, spaced
+   like the status line above it and the notice below. */
+.tx-deadline--standalone {
+  margin-top: 2rem;
+}
+
+/* The deposit countdown, without a line of JavaScript.
+
+   The server prints the seconds left as --tx-seconds. A stepped animation
+   walks --tx-left from there down to 0 one whole second at a time, the two
+   derived properties split it into minutes and seconds, and counters print
+   those. The properties have to be registered as <integer>: an unregistered
+   custom property cannot interpolate, so it would jump instead of tick.
+
+   The clock runs on the browser's timer from the moment the page renders, so
+   a sleeping laptop can leave it behind. REFRESH re-syncs it with the server. */
+@property --tx-left {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tx-min {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tx-sec {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* The clock and EXPIRED share one grid cell, so the swap does not shift the
+   row. Tabular figures stop the digits jittering sideways as they change. */
+.tx-timer {
+  display: inline-grid;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.tx-timer > * {
+  grid-area: 1 / 1;
+  justify-self: end;
+}
+
+.tx-timer__clock {
+  --tx-left: var(--tx-seconds);
+  /* An <integer> rounds to the nearest whole number, so taking half a minute
+     off first turns that rounding into the floor a clock needs. */
+  --tx-min: calc((var(--tx-left) - 30) / 60);
+  --tx-sec: calc(var(--tx-left) - var(--tx-min) * 60);
+  counter-reset: tx-min var(--tx-min) tx-sec var(--tx-sec);
+  animation:
+    tx-countdown calc(var(--tx-seconds) * 1s) steps(var(--tx-seconds)) forwards,
+    tx-conceal 0s calc(var(--tx-seconds) * 1s) forwards;
+}
+
+.tx-timer__clock::after {
+  content: counter(tx-min, decimal-leading-zero) ":" counter(tx-sec, decimal-leading-zero);
+}
+
+/* Held back until the countdown runs out, then shown in place of the clock.
+   The page's meta refresh loads the expired page at the same moment, so this
+   covers the reload, and stays put where a browser has meta refresh disabled. */
+.tx-timer__expired {
+  visibility: hidden;
+  color: var(--danger);
+  animation: tx-reveal 0s calc(var(--tx-seconds) * 1s) forwards;
+}
+
+/* The window was already shut when the page rendered: no clock, no waiting. */
+.tx-timer--expired .tx-timer__expired {
+  visibility: visible;
+  animation: none;
+}
+
+/* No `from`: the animation starts at the underlying --tx-left, which is the
+   --tx-seconds the server printed. */
+@keyframes tx-countdown {
+  to {
+    --tx-left: 0;
+  }
+}
+
+@keyframes tx-conceal {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes tx-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
 
 
 /* A payout hash is 64 characters of meaningless-looking hex, so it is set to

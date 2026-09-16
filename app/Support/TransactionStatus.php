@@ -26,6 +26,7 @@ final class TransactionStatus
      * deposit - the visitor still has to pay, so show amount, address, QR and clock.
      * support - offer the contact-support call to action.
      * payout  - the swap has settled, so show the payout transaction hash.
+     * lapsed  - the deposit window ran out, so show the clock stopped at EXPIRED.
      */
     private const STATES = [
         'new' => [
@@ -34,6 +35,7 @@ final class TransactionStatus
             'deposit' => true,
             'support' => false,
             'payout' => false,
+            'lapsed' => false,
         ],
         'confirming' => [
             'label' => 'Awaiting Confirmation',
@@ -41,6 +43,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => false,
             'payout' => false,
+            'lapsed' => false,
         ],
         'sending' => [
             'label' => 'Sending',
@@ -48,6 +51,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => false,
             'payout' => false,
+            'lapsed' => false,
         ],
         'finished' => [
             'label' => 'Completed',
@@ -55,6 +59,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => false,
             'payout' => true,
+            'lapsed' => false,
         ],
         'expired' => [
             'label' => 'Expired',
@@ -62,6 +67,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => false,
             'payout' => false,
+            'lapsed' => true,
         ],
         'error' => [
             'label' => 'Failed',
@@ -69,6 +75,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => true,
             'payout' => false,
+            'lapsed' => false,
         ],
         'refunded' => [
             'label' => 'Refunded',
@@ -76,6 +83,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => true,
             'payout' => false,
+            'lapsed' => false,
         ],
         'support' => [
             'label' => 'Contact Support',
@@ -83,6 +91,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => true,
             'payout' => false,
+            'lapsed' => false,
         ],
     ];
 
@@ -186,6 +195,7 @@ final class TransactionStatus
             'deposit' => false,
             'support' => false,
             'payout' => false,
+            'lapsed' => false,
         ];
     }
 

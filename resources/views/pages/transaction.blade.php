@@ -3,6 +3,15 @@
 @section('title', 'Transaction '.$transaction['id'].' &mdash; SageSwap')
 @section('description', 'Send your deposit to complete the swap. The rate is held for the length of the deposit window and the payout follows automatically.')
 
+{{-- Reload onto the expired page the moment the deposit window closes. A meta
+     refresh is plain HTML, so this needs no script; the server has already
+     worked out how long is left, and it re-renders the status on arrival. --}}
+@if ($transaction['status']['deposit'] && $transaction['seconds_left'] > 0)
+  @push('head')
+    <meta http-equiv="refresh" content="{{ (int) $transaction['seconds_left'] }}; url={{ $transaction['expired_url'] }}" />
+  @endpush
+@endif
+
 @section('content')
   <main class="page-main">
     <div class="page-heading page-heading--centered">
@@ -70,6 +79,12 @@
         </div>
       </div>
 
+      {{-- On a lapsed swap the clock stays on the page, stopped at EXPIRED,
+           so the visitor can see why the deposit instructions are gone. --}}
+      @if ($transaction['status']['lapsed'])
+        @include('partials.tx-deadline', ['standalone' => true])
+      @endif
+
       @include('partials.tx-status-notice')
 
       {{-- The payout hash, on a settled swap only. Driven by the status flag
@@ -106,10 +121,7 @@
           <span class="copy-row__value copy-row__value--wrap">{{ $transaction['deposit_address'] }}</span>
         </div>
 
-        <p class="tx-deadline">
-          TIME LEFT
-          <span class="tx-deadline__value">{{ $transaction['minutes_left'] }} MINUTES</span>
-        </p>
+        @include('partials.tx-deadline')
 
         <div class="tx-qr">
           <div class="tx-qr__plate">{!! $transaction['qr'] !!}</div>

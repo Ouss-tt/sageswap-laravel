@@ -199,23 +199,36 @@ class SwapController extends Controller
      * get reviewed. Unrecognised codes are allowed through on purpose: seeing
      * TransactionStatus::fallback() render is the point of testing it.
      */
-    public function preview(string $status): View
+    public function preview(Request $request, string $status): View
     {
         abort_unless(app()->environment('local'), 404);
 
-        return view('pages.transaction', [
-            'transaction' => $this->transaction(
-                self::PREVIEW_ID,
-                ['status' => $status] + session('swap', [])
-            ),
-        ]);
+        $transaction = $this->transaction(
+            self::PREVIEW_ID,
+            ['status' => $status] + session('swap', [])
+        );
+
+        // The status here is pinned by the URL, so reloading this page would
+        // only show `new` again. Send the timeout to the expired preview instead.
+        $transaction['expired_url'] = route('transaction.preview', ['status' => 'expired']);
+
+        // ?seconds=10 starts the deposit clock near the end, so the switch to
+        // the expired page can be reviewed without sitting through the window.
+        if ($request->filled('seconds')) {
+            $transaction['seconds_left'] = min(
+                max(0, (int) $request->query('seconds')),
+                self::DEPOSIT_WINDOW_MINUTES * 60
+            );
+        }
+
+        return view('pages.transaction', ['transaction' => $transaction]);
     }
 
     /**
      * Build the transaction shown on the status page.
      *
-     * The deposit window is anchored in the session so the countdown actually
-     * moves when the visitor hits refresh.
+     * The deposit window is anchored in the session so a refresh picks the
+     * countdown up where it left off instead of starting it over.
      */
     private function transaction(string $id, array $swap): array
     {
@@ -231,8 +244,7 @@ class SwapController extends Controller
         $openedAt = session()->get("transactions.$id", now()->timestamp);
         session()->put("transactions.$id", $openedAt);
 
-        $elapsed = (int) floor((now()->timestamp - $openedAt) / 60);
-        $minutesLeft = max(0, self::DEPOSIT_WINDOW_MINUTES - $elapsed);
+        $secondsLeft = max(0, self::DEPOSIT_WINDOW_MINUTES * 60 - (now()->timestamp - $openedAt));
 
         $sendChain = self::COIN_CHAINS[$sendCoin] ?? 'bitcoin';
         $depositAddress = self::DEPOSIT_ADDRESSES[$sendChain];
@@ -240,7 +252,7 @@ class SwapController extends Controller
         // A status handed to us by the backend always wins; the deposit clock
         // only decides the status while nothing upstream has an opinion.
         $status = TransactionStatus::resolve(
-            $swap['status'] ?? ($minutesLeft > 0 ? 'new' : 'expired')
+            $swap['status'] ?? ($secondsLeft > 0 ? 'new' : 'expired')
         );
 
         return [
@@ -265,7 +277,12 @@ class SwapController extends Controller
             // from the swap id so it is the right shape and stays put across
             // refreshes, the same way the demo addresses do.
             'payout_txid' => $swap['payout_txid'] ?? hash('sha256', $id),
-            'minutes_left' => $minutesLeft,
+            // Whole seconds until the deposit window closes. The page counts
+            // down from here in CSS, so this only has to be right at render.
+            'seconds_left' => $secondsLeft,
+            // Where the page reloads to when the clock runs out. The same page:
+            // by then the clock above resolves the status to `expired`.
+            'expired_url' => route('transaction', ['id' => $id]),
             'qr' => QrCode::svg($this->depositUri($sendChain, $depositAddress, $sendAmount)),
         ];
     }
