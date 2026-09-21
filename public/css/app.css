@@ -343,6 +343,19 @@ table {
   color: var(--background);
 }
 
+/* .btn in the site green: the same solid fill that empties to an outline on
+   hover, with the border holding the green while the fill is gone. */
+.btn--accent {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: var(--background);
+}
+
+.btn--accent:hover {
+  background-color: transparent;
+  color: var(--accent);
+}
+
 .link-accent {
   color: var(--accent);
   text-decoration: underline;

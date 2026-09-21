@@ -141,7 +141,7 @@
 
       <div class="tx-actions">
         <a href="{{ route('transparency') }}" class="link-accent">Letter of Guarantee</a>
-        <a href="{{ route('transaction', ['id' => $transaction['id']]) }}" class="btn btn--wide">REFRESH</a>
+        <a href="{{ route('transaction', ['id' => $transaction['id']]) }}" class="btn btn--wide btn--accent">REFRESH</a>
       </div>
     </div>
 
