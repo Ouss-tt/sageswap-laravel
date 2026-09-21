@@ -565,6 +565,11 @@ final class QrCode
     /* Output                                                              */
     /* ------------------------------------------------------------------ */
 
+    /**
+     * Colour is left to the stylesheet: the modules paint in currentColor and
+     * the ground is transparent, so whatever the SVG sits on is the quiet
+     * zone. Dropped onto a page with no CSS it falls back to black on white.
+     */
     public function toSvg(int $quiet = 4): string
     {
         $dimension = $this->size + $quiet * 2;
@@ -581,8 +586,7 @@ final class QrCode
         return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '.$dimension.' '.$dimension.'"'
             .' width="100%" height="100%" shape-rendering="crispEdges" role="img"'
             .' aria-label="QR code for the deposit address">'
-            .'<rect width="'.$dimension.'" height="'.$dimension.'" fill="#ffffff"/>'
-            .'<path d="'.$path.'" fill="#000000"/>'
+            .'<path d="'.$path.'" fill="currentColor"/>'
             .'</svg>';
     }
 }

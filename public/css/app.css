@@ -2378,14 +2378,57 @@ table {
   gap: 0.875rem;
 }
 
-/* The plate stays light: most scanners expect dark modules on a pale ground. */
+/* Accent modules on the page's own dark ground, so the code no longer flares
+   white on a dark page. That makes it a reversed code (light modules on
+   dark): phone cameras and current wallet scanners read it, a few older
+   ZXing/zbar builds do not, and the address above is always there to copy.
+   The SVG ground is transparent and its 4-module quiet zone is this plate,
+   so the plate stays one flat colour: no gradient, texture or glow. */
 .tx-qr__plate {
-  width: 220px;
+  position: relative;
+  width: 240px;
   max-width: 100%;
-  border: 1px solid var(--border);
-  background-color: #ffffff;
+  border: 1px solid color-mix(in oklab, var(--accent) 28%, var(--border));
+  background-color: var(--background);
+  color: var(--accent);
   padding: 0.5rem;
   line-height: 0;
+}
+
+/* Viewfinder corners drawn over the border, which say "scan me" without a
+   word. Laid over the frame, never inside it, so the quiet zone stays clear. */
+.tx-qr__plate::before {
+  --tx-qr-arm: 18px;
+  --tx-qr-weight: 2px;
+  --tx-qr-ink: linear-gradient(var(--accent), var(--accent));
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    var(--tx-qr-ink) left top / var(--tx-qr-arm) var(--tx-qr-weight),
+    var(--tx-qr-ink) left top / var(--tx-qr-weight) var(--tx-qr-arm),
+    var(--tx-qr-ink) right top / var(--tx-qr-arm) var(--tx-qr-weight),
+    var(--tx-qr-ink) right top / var(--tx-qr-weight) var(--tx-qr-arm),
+    var(--tx-qr-ink) left bottom / var(--tx-qr-arm) var(--tx-qr-weight),
+    var(--tx-qr-ink) left bottom / var(--tx-qr-weight) var(--tx-qr-arm),
+    var(--tx-qr-ink) right bottom / var(--tx-qr-arm) var(--tx-qr-weight),
+    var(--tx-qr-ink) right bottom / var(--tx-qr-weight) var(--tx-qr-arm);
+  background-repeat: no-repeat;
+}
+
+/* Browsers drop backgrounds when printing, which would leave pale green
+   modules on white paper. On paper the code goes back to black on white. */
+@media print {
+  .tx-qr__plate {
+    border-color: #000000;
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .tx-qr__plate::before {
+    content: none;
+  }
 }
 
 .tx-qr__hint {
