@@ -47,11 +47,44 @@
         <p class="aff-funds__label">FUNDS AVAILABLE</p>
         <p class="aff-funds__amount">
           <span class="coin-badge"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 16V8l5 4 5-4v8"/></svg></span>
-          {{ $affiliate['balance'] }} XMR
+          {{ $affiliate['available'] }} XMR
         </p>
       </div>
-      <a href="{{ route('affiliate.withdraw') }}" class="btn btn--wide">WITHDRAW FUNDS</a>
+      {{-- The button goes while a request is in flight rather than turning
+           grey: a withdrawal takes the whole balance, so there is nothing left
+           to press it for, and the box below says so in words. --}}
+      @unless ($affiliate['pending_withdrawal'])
+        <a href="{{ route('affiliate.withdraw') }}" class="btn btn--wide">WITHDRAW FUNDS</a>
+      @endunless
     </div>
+
+    @if ($affiliate['pending_withdrawal'])
+      <div class="aff-pending">
+        <p class="aff-pending__label">
+          <span class="dot-warning" aria-hidden="true">&#9679;</span> WITHDRAWAL PENDING
+        </p>
+        <div class="aff-pending__rows">
+          <div>
+            <p class="field-label">AMOUNT</p>
+            <p class="aff-pending__value">{{ $affiliate['pending_withdrawal']['amount'] }} XMR</p>
+          </div>
+          <div>
+            <p class="field-label">REQUESTED</p>
+            <p class="aff-pending__value">{{ $affiliate['pending_withdrawal']['requested_at'] }}</p>
+          </div>
+        </div>
+        <div>
+          <p class="field-label">TO ADDRESS</p>
+          <div class="copy-row copy-row--address copy-row--tight">
+            <span class="copy-row__value copy-row__value--wrap">{{ $affiliate['pending_withdrawal']['address'] }}</span>
+          </div>
+        </div>
+        <p class="aff-pending__note">
+          Requests are usually processed within 24 hours. You can request another
+          withdrawal once this one has been paid out.
+        </p>
+      </div>
+    @endif
 
     <div class="aff-history">
       <p class="aff-history__label">TRANSACTIONS SINCE LAST WITHDRAWAL</p>
@@ -81,6 +114,10 @@
           @endforelse
         </tbody>
       </table>
+
+      {{-- Paging is a plain link with ?page= on it: the table is server
+           rendered and there is no script on this site to fetch a page with. --}}
+      {{ $transactions->links('pagination.sageswap') }}
     </div>
 
     <section class="aff-faq">

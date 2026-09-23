@@ -1408,6 +1408,158 @@ table {
   color: var(--muted-foreground);
 }
 
+/* Announcements
+   -------------
+   A fixed stack under the header, top right. It sits below the header's z-index
+   rather than above it: the header is sticky, so anything that outranked it
+   would cover the nav the moment the page scrolled.
+
+   These are meant to stop you, so each one is a solid block of its tone rather
+   than the dark card with a coloured edge that .notice uses inside the page.
+   That is the same move .btn--accent makes - a flat fill in the site green on a
+   near-black page - and it needs no shadow or gradient, neither of which this
+   stylesheet uses anywhere.
+
+   Dismissal is CSS alone - an sr-only checkbox immediately before the notice it
+   closes. One rule closes all of them, so a new announcement needs no CSS. The
+   state dies with the page, which is the point: an outage notice should come
+   back until the outage is over. */
+
+.announce {
+  position: fixed;
+  top: calc(74px + 1rem);
+  right: 1.5rem;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(360px, calc(100vw - 3rem));
+  /* The stack is taller than the notices inside it once one is dismissed, and
+     an invisible fixed box must not swallow clicks meant for the page. */
+  pointer-events: none;
+}
+
+.announce__toggle:checked + .announce__item {
+  display: none;
+}
+
+.announce__item {
+  position: relative;
+  padding: 1rem 2.75rem 1.125rem 1.25rem;
+  pointer-events: auto;
+  /* The tone modifiers below all override this; it is here so a notice can
+     never render as a transparent hole over the page. */
+  background-color: var(--accent);
+  color: var(--background);
+  /* Arriving is half of being noticed: they slide in from the edge they are
+     pinned to, one after another. */
+  animation: announce-in 0.32s ease-out both;
+}
+
+.announce__item:nth-of-type(2) {
+  animation-delay: 0.08s;
+}
+
+.announce__item:nth-of-type(3) {
+  animation-delay: 0.16s;
+}
+
+@keyframes announce-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+
+/* Ink is set once per tone and everything inside inherits it, so the title,
+   the body and the close control stay legible on whichever fill they land on. */
+.announce__item--accent {
+  background-color: var(--accent);
+  color: var(--background);
+}
+
+.announce__item--warning {
+  background-color: var(--warning);
+  color: var(--background);
+}
+
+/* The one tone that cannot take dark ink: white on flat #ff0000 is 4:1, so the
+   fill drops a shade to clear AA - the same correction .btn--danger makes. */
+.announce__item--danger {
+  background-color: color-mix(in oklab, var(--danger) 80%, black);
+  color: var(--foreground);
+}
+
+/* Set as a tag line rather than a headline: it is the same uppercase, letter-
+   spaced label the rest of the site uses to name a thing above its value. */
+.announce__title {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.announce__body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  /* Held off the title without leaving the tone's ink, which is what a fixed
+     grey would do on three different fills. */
+  color: color-mix(in oklab, currentColor 88%, transparent);
+}
+
+.announce__title + .announce__body {
+  margin-top: 0.5rem;
+}
+
+/* The click target is the label; the checkbox it drives is sr-only and stays
+   where the keyboard can reach it. */
+.announce__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.625rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 18px;
+  line-height: 1;
+  /* Held back from the ink without fading out of reach: at 18px this is still
+     normal-size text as far as contrast goes, and the red fill is the tone with
+     the least room to give. */
+  color: color-mix(in oklab, currentColor 78%, transparent);
+  transition: color var(--transition);
+}
+
+.announce__close:hover {
+  color: currentColor;
+}
+
+/* Keyboard focus lands on the hidden checkbox, so the ring has to be drawn on
+   the label it controls or tabbing past would show nothing at all. It is the
+   page background rather than the accent: the accent is itself one of the
+   fills, and a green ring on a green notice is not a ring. */
+.announce__toggle:focus-visible + .announce__item .announce__close {
+  outline: 2px solid var(--background);
+  outline-offset: 2px;
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce__item {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Full width under the header: 360px in a corner leaves a phone reading a
+     two-word column. */
+  .announce {
+    top: calc(74px + 0.75rem);
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+  }
+}
+
 /* Tables */
 
 .data-table {
@@ -1556,6 +1708,53 @@ table {
   align-items: center;
   gap: 1rem;
   font-size: 34px;
+}
+
+/* Pending withdrawal
+   -----------------
+   Warning-toned rather than danger: nothing has gone wrong, the money is just
+   already spoken for. It carries the amount that .aff-funds above no longer
+   shows, which is why it sits directly under it. */
+
+.aff-pending {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--warning);
+  background-color: var(--surface);
+  padding: 1.5rem 2rem;
+}
+
+.aff-pending__label {
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.dot-warning {
+  color: var(--warning);
+}
+
+.aff-pending__rows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.aff-pending__value {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+
+.aff-pending__note {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--text-muted);
 }
 
 .coin-badge {

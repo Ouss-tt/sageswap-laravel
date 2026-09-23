@@ -21,6 +21,8 @@
     <div class="page">
       @include('partials.header')
 
+      @include('partials.announcements')
+
       @yield('content')
 
       @include('partials.footer')
