@@ -356,6 +356,24 @@ table {
   color: var(--accent);
 }
 
+/* The one destructive .btn on the site, so it starts as an outline instead of
+   a filled block: it should read as available, not as the thing to press. The
+   red is carried by the border, and the label stays white - --danger on the
+   page ground is 3.8:1, which is fine for a status word and not for a control
+   someone has to read before pressing. */
+.btn--danger {
+  border-color: var(--danger);
+  background-color: transparent;
+  color: var(--foreground);
+}
+
+/* The fill darkens the token for the same reason: white on flat #ff0000 is
+   4:1, and a shade down clears AA without leaving the red. */
+.btn--danger:hover {
+  background-color: color-mix(in oklab, var(--danger) 80%, black);
+  color: var(--foreground);
+}
+
 .link-accent {
   color: var(--accent);
   text-decoration: underline;
@@ -2509,6 +2527,27 @@ table {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+/* Set well below the card: this is the end of the page, not another action on
+   the swap, and the gap is what keeps it from being pressed on the way past. */
+.tx-delete {
+  margin-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tx-delete__hint {
+  margin: 0;
+  max-width: 48ch;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--text-muted);
 }
 
 @media (max-width: 640px) {

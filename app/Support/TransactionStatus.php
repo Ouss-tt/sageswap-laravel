@@ -27,6 +27,9 @@ final class TransactionStatus
      * support - offer the contact-support call to action.
      * payout  - the swap has settled, so show the payout transaction hash.
      * lapsed  - the deposit window ran out, so show the clock stopped at EXPIRED.
+     * delete  - the swap is done with, so offer to remove the record. Only the
+     *           two states that need nothing further: a failed, refunded or held
+     *           swap still has a support conversation hanging off its id.
      */
     private const STATES = [
         'new' => [
@@ -36,6 +39,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
         'confirming' => [
             'label' => 'Awaiting Confirmation',
@@ -44,6 +48,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
         'sending' => [
             'label' => 'Sending',
@@ -52,6 +57,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
         'finished' => [
             'label' => 'Completed',
@@ -60,6 +66,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => true,
             'lapsed' => false,
+            'delete' => true,
         ],
         'expired' => [
             'label' => 'Expired',
@@ -68,6 +75,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => false,
             'lapsed' => true,
+            'delete' => true,
         ],
         'error' => [
             'label' => 'Failed',
@@ -76,6 +84,7 @@ final class TransactionStatus
             'support' => true,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
         'refunded' => [
             'label' => 'Refunded',
@@ -84,6 +93,7 @@ final class TransactionStatus
             'support' => true,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
         'support' => [
             'label' => 'Contact Support',
@@ -92,6 +102,7 @@ final class TransactionStatus
             'support' => true,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ],
     ];
 
@@ -196,6 +207,7 @@ final class TransactionStatus
             'support' => false,
             'payout' => false,
             'lapsed' => false,
+            'delete' => false,
         ];
     }
 

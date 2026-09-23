@@ -151,5 +151,26 @@
         <a href="{{ route('support') }}" class="link-accent">Contact support</a>
       </p>
     @endif
+
+    {{-- A swap that is over: nothing above will change again, so offer to clear
+         it. Last thing on the page on purpose - it is the one irreversible
+         control here, and it has no business sitting next to REFRESH. Which
+         statuses get it is TransactionStatus's call, not this view's. --}}
+    @if ($transaction['status']['delete'])
+      <form
+        action="{{ route('transaction.destroy', ['id' => $transaction['id']]) }}"
+        method="POST"
+        class="tx-delete"
+      >
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn--wide btn--danger">DELETE TRANSACTION</button>
+        <p class="tx-delete__hint">
+          Clears this swap from your browser and returns you to the swap form.
+          It cannot be undone, so copy the transaction ID above first if you
+          might still need it.
+        </p>
+      </form>
+    @endif
   </main>
 @endsection

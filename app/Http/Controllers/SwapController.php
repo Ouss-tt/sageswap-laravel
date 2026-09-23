@@ -193,6 +193,27 @@ class SwapController extends Controller
     }
 
     /**
+     * Drop a finished or expired swap and send the visitor back to the form.
+     *
+     * The only thing this front end holds for a swap is the session record that
+     * anchors its deposit window, so that is all there is to remove. Once a
+     * backend owns transactions, the delete call belongs here, and the visitor
+     * still lands on the swap form either way.
+     *
+     * The status is not re-checked: the button only renders on a swap the
+     * status table marks deletable, and a request for one that is still running
+     * costs the visitor their own record and nothing else.
+     */
+    public function destroy(string $id): RedirectResponse
+    {
+        abort_unless(Str::isUuid($id), 404);
+
+        session()->forget("transactions.$id");
+
+        return redirect()->route('swap');
+    }
+
+    /**
      * Render the transaction page pinned to one status.
      *
      * Nothing moves a swap through its lifecycle yet, so this is how the states
