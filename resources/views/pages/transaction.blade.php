@@ -164,12 +164,25 @@
       >
         @csrf
         @method('DELETE')
-        <button type="submit" class="btn btn--wide btn--danger">DELETE TRANSACTION</button>
-        <p class="tx-delete__hint">
-          Clears this swap from your browser and returns you to the swap form.
-          It cannot be undone, so copy the transaction ID above first if you
-          might still need it.
-        </p>
+        {{-- Opens the confirmation below instead of submitting: a native popover,
+             so no script. A browser without popover support does nothing on
+             click, which fails safe - nothing is deleted. --}}
+        <button type="button" class="btn btn--wide btn--danger" popovertarget="tx-delete-confirm">DELETE TRANSACTION</button>
+
+        <div id="tx-delete-confirm" class="tx-confirm" popover role="dialog" aria-labelledby="tx-confirm-title">
+          <p id="tx-confirm-title" class="tx-confirm__title">DELETE THIS TRANSACTION?</p>
+          <p class="field-label">TRANSACTION ID</p>
+          <p class="tx-confirm__id">{{ $transaction['id'] }}</p>
+          <div class="tx-confirm__body">
+            <p>Clicking &ldquo;CONFIRM&rdquo; will permanently delete this transaction and it cannot be recovered.</p>
+            <p>If you&rsquo;ve sent coins, we cannot issue a refund if something goes wrong.</p>
+            <p>Proceed at your own risk.</p>
+          </div>
+          <div class="tx-confirm__actions">
+            <button type="button" class="btn btn--ghost" popovertarget="tx-delete-confirm" popovertargetaction="hide">CANCEL</button>
+            <button type="submit" class="btn btn--danger">CONFIRM</button>
+          </div>
+        </div>
       </form>
     @endif
   </main>

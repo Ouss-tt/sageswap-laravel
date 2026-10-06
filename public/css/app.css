@@ -2738,15 +2738,70 @@ table {
   gap: 1rem;
 }
 
-.tx-delete__hint {
-  margin: 0;
-  max-width: 48ch;
-  text-align: center;
+/* The delete confirmation: a native popover, so it opens, closes on Esc or an
+   outside click, and sits in the top layer with no script. Drawn as a
+   form-card with a red rule on top, the one place the page says "danger". */
+.tx-confirm {
+  width: min(520px, calc(100% - 2rem));
+  margin: auto;
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--danger);
+  background-color: var(--surface);
+  color: var(--foreground);
+  padding: 2rem;
+}
+
+.tx-confirm::backdrop {
+  background-color: color-mix(in oklab, var(--background) 80%, transparent);
+}
+
+.tx-confirm__title {
+  margin: 0 0 1.5rem;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  color: var(--danger);
+}
+
+.tx-confirm__id {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.tx-confirm__body {
+  margin-top: 1.5rem;
   font-family: var(--font-display);
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: 0;
   color: var(--text-muted);
+}
+
+.tx-confirm__body p {
+  margin: 0 0 0.75rem;
+}
+
+.tx-confirm__body p:last-child {
+  margin-bottom: 0;
+  color: var(--foreground);
+}
+
+.tx-confirm__actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .tx-confirm {
+    padding: 1.5rem;
+  }
+
+  .tx-confirm__actions {
+    flex-direction: column-reverse;
+  }
 }
 
 @media (max-width: 640px) {
