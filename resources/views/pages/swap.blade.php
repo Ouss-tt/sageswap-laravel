@@ -23,7 +23,9 @@
                    outside the rate labels is what lets a tap open the tip
                    instead of switching the rate. --}}
               <input type="checkbox" id="rate-tip-floating" class="sr-only" aria-label="Explain the floating rate" aria-describedby="tip-floating" />
+              <label for="rate-tip-floating" class="tip-backdrop" aria-hidden="true"></label>
               <input type="checkbox" id="rate-tip-fixed" class="sr-only" aria-label="Explain the fixed rate" aria-describedby="tip-fixed" />
+              <label for="rate-tip-fixed" class="tip-backdrop" aria-hidden="true"></label>
 
               <label for="rate-floating" class="rate-tabs__label rate-tabs__label--floating">
                 <span><span class="rate-tabs__marker">&#9642; </span>FLOATING RATE</span>

@@ -3,7 +3,9 @@
        child of it. Nested in the link, every tap on "?" navigated away
        instead of explaining the mode. --}}
   <input type="checkbox" id="tab-tip-standard" class="sr-only" aria-label="Explain Standard Swap" aria-describedby="tip-standard" />
+  <label for="tab-tip-standard" class="tip-backdrop" aria-hidden="true"></label>
   <input type="checkbox" id="tab-tip-noaml" class="sr-only" aria-label="Explain NO AML Mode" aria-describedby="tip-noaml" />
+  <label for="tab-tip-noaml" class="tip-backdrop" aria-hidden="true"></label>
 
   <a href="{{ route('swap') }}" @class(['swap-panel__tab', 'is-active' => request()->routeIs('swap')])>STANDARD SWAP</a>
   <a href="{{ route('aml-swap') }}" @class(['swap-panel__tab', 'is-active' => request()->routeIs('aml-swap')])>NO AML SWAP MODE</a>

@@ -795,14 +795,37 @@ table {
   color: var(--foreground);
 }
 
-.swap-panel__help--standard:hover ~ .swap-tip--standard,
 #tab-tip-standard:checked ~ .swap-tip--standard,
-.swap-tip--standard:hover,
-.swap-panel__help--noaml:hover ~ .swap-tip--noaml,
-#tab-tip-noaml:checked ~ .swap-tip--noaml,
-.swap-tip--noaml:hover {
+#tab-tip-noaml:checked ~ .swap-tip--noaml {
   opacity: 1;
   visibility: visible;
+}
+
+/* Phones keep :hover on whatever was tapped last, which pinned the tip open
+   after the checkbox had already closed it. Hover-to-peek is mouse-only. */
+@media (hover: hover) {
+  .swap-panel__help--standard:hover ~ .swap-tip--standard,
+  .swap-tip--standard:hover,
+  .swap-panel__help--noaml:hover ~ .swap-tip--noaml,
+  .swap-tip--noaml:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* An open tip lays an invisible label for its checkbox over the whole page,
+   just under the tip itself: a tap anywhere else - the same "?" included -
+   unticks it. That is "tap outside to close" without a line of JS. */
+label.tip-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  cursor: default;
+}
+
+:checked + label.tip-backdrop {
+  display: block;
 }
 
 .swap-panel__body {
@@ -982,14 +1005,20 @@ table {
    :checked alone - tying it to :focus-visible as well left the tip pinned
    open, because activating the label focuses the checkbox and the second
    tap could never close it again. Keyboard users toggle it with Space. */
-.rate-tabs__help--floating:hover ~ .rate-tip--floating,
 #rate-tip-floating:checked ~ .rate-tip--floating,
-.rate-tip--floating:hover,
-.rate-tabs__help--fixed:hover ~ .rate-tip--fixed,
-#rate-tip-fixed:checked ~ .rate-tip--fixed,
-.rate-tip--fixed:hover {
+#rate-tip-fixed:checked ~ .rate-tip--fixed {
   opacity: 1;
   visibility: visible;
+}
+
+@media (hover: hover) {
+  .rate-tabs__help--floating:hover ~ .rate-tip--floating,
+  .rate-tip--floating:hover,
+  .rate-tabs__help--fixed:hover ~ .rate-tip--fixed,
+  .rate-tip--fixed:hover {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .swap-rows {
