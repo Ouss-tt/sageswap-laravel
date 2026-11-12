@@ -17,10 +17,11 @@ class SwapController extends Controller
     /** Fixed id for the local status preview, so its countdown holds still. */
     private const PREVIEW_ID = '00000000-0000-4000-8000-000000000000';
 
-    /** The two swap modes, as they are labelled on the swap tabs. */
+    /** The swap modes, as they are labelled on the swap tabs. */
     private const MODE_LABELS = [
         'standard' => 'STANDARD SWAP',
-        'aml' => 'NO AML SWAP MODE',
+        'aml' => 'NO AML SWAP',
+        'direct' => 'DIRECT FROM EXCHANGE',
     ];
 
     /**
@@ -168,6 +169,49 @@ class SwapController extends Controller
         return $this->openTransaction($request->only([
             'send_amount', 'send_coin', 'address',
         ]) + ['receive_coin' => 'xmr', 'mode' => 'aml']);
+    }
+
+    public function direct(): View
+    {
+        return view('pages.direct-exchange');
+    }
+
+    public function quoteDirect(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'send_amount' => ['required', 'numeric', 'min:0'],
+            'receive_coin' => ['required', 'in:'.implode(',', $this->directPayoutCoins())],
+        ], [], [
+            'send_amount' => 'amount',
+            'receive_coin' => 'receive coin',
+        ]);
+
+        return back()->withInput()->with('status', 'Rate quotes are not wired up yet.');
+    }
+
+    public function storeDirect(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'send_amount' => ['required', 'numeric', 'min:0'],
+            'receive_coin' => ['required', 'in:'.implode(',', $this->directPayoutCoins())],
+            'address' => ['required', 'string', 'max:255'],
+            'refund_address' => ['nullable', 'string', 'max:255'],
+        ], [], [
+            'send_amount' => 'amount',
+            'receive_coin' => 'receive coin',
+            'address' => 'payout address',
+            'refund_address' => 'refund address',
+        ]);
+
+        return $this->openTransaction($request->only([
+            'send_amount', 'receive_amount', 'receive_coin', 'address',
+        ]) + ['send_coin' => 'xmr', 'mode' => 'direct']);
+    }
+
+    /** Direct from Exchange takes Monero in, so it can pay out anything else. */
+    private function directPayoutCoins(): array
+    {
+        return array_diff(array_keys(config('coins')), ['xmr']);
     }
 
     /**

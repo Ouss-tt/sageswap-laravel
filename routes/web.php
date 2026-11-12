@@ -16,6 +16,10 @@ Route::get('/aml_swap', [SwapController::class, 'aml'])->name('aml-swap');
 Route::post('/aml_swap', [SwapController::class, 'storeAml'])->name('aml-swap.store');
 Route::post('/aml_swap/quote', [SwapController::class, 'quoteAml'])->name('aml-swap.quote');
 
+Route::get('/direct-exchange', [SwapController::class, 'direct'])->name('direct-exchange');
+Route::post('/direct-exchange', [SwapController::class, 'storeDirect'])->name('direct-exchange.store');
+Route::post('/direct-exchange/quote', [SwapController::class, 'quoteDirect'])->name('direct-exchange.quote');
+
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/support', 'pages.support')->name('support');
 Route::view('/transparency', 'pages.transparency')->name('transparency');

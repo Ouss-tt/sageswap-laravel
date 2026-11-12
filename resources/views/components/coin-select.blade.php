@@ -1,12 +1,14 @@
-@props(['name', 'selected' => 'btc', 'label' => 'Coin'])
+@props(['name', 'selected' => 'btc', 'label' => 'Coin', 'except' => []])
+
+@php($coins = array_diff_key(config('coins'), array_flip($except)))
 
 <div class="coin-field">
-    @foreach (config('coins') as $value => $title)
+    @foreach ($coins as $value => $title)
         <span class="coin-field__icon" data-coin="{{ $value }}" aria-hidden="true"><x-coin-icon :coin="$value" /></span>
     @endforeach
 
     <select class="coin-field__select" name="{{ $name }}" aria-label="{{ $label }}">
-        @foreach (config('coins') as $value => $title)
+        @foreach ($coins as $value => $title)
             <option value="{{ $value }}" @selected(old($name, $selected) === $value)>{{ $title }}</option>
         @endforeach
     </select>

@@ -31,12 +31,12 @@ final class Announcement
     /**
      * Which route names make up each surface.
      *
-     * Both swap tabs count as the homepage: they are one panel in two modes,
-     * and a visitor who flips to NO AML has not left the page an outage notice
-     * was meant for. Drop 'aml-swap' from this list to change that.
+     * Every swap tab counts as the homepage: they are one panel in three modes,
+     * and a visitor who flips to another mode has not left the page an outage
+     * notice was meant for. Drop a route from this list to change that.
      */
     private const SURFACES = [
-        'home' => ['swap', 'aml-swap'],
+        'home' => ['swap', 'aml-swap', 'direct-exchange'],
         'affiliate' => ['affiliate.*'],
     ];
 

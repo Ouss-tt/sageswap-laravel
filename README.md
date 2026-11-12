@@ -31,6 +31,9 @@ Defined in `routes/web.php`.
 | GET | `/aml_swap` | `aml-swap` | `SwapController@aml` |
 | POST | `/aml_swap` | `aml-swap.store` | `SwapController@storeAml` |
 | POST | `/aml_swap/quote` | `aml-swap.quote` | `SwapController@quoteAml` |
+| GET | `/direct-exchange` | `direct-exchange` | `SwapController@direct` |
+| POST | `/direct-exchange` | `direct-exchange.store` | `SwapController@storeDirect` |
+| POST | `/direct-exchange/quote` | `direct-exchange.quote` | `SwapController@quoteDirect` |
 | GET | `/help` | `help` | `pages.help` |
 | GET | `/faq` | `faq` | `pages.faq` |
 | GET | `/support` | `support` | `pages.support` |
